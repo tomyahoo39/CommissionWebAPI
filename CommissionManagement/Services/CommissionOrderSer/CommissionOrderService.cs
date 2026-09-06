@@ -165,5 +165,54 @@ namespace CommissionManagement.Services.CommissionOrderSer
 
             return orders;
         }
+
+        public async Task CreateNewOrder(CreateOrderDTO createOrderDTO)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var period = await _context.CommissionPeriods.OrderByDescending(p => p.Id).FirstOrDefaultAsync();
+
+                if (period == null)
+                {
+                    throw new InvalidOperationException("目前無開放的委託期資料");
+                }
+
+                var createdAt = DateOnly.FromDateTime(DateTime.Now);
+
+                if(createdAt < period.OpenAt || createdAt > period.CloseAt)
+                {
+                    throw new InvalidOperationException("當前不在委託開放時間內");
+                }
+
+                var newOrder = new CommissionOrder
+                {
+                    OrderCode = $"ORD{DateTime.Now:yyyyMMdd}{new Random().Next(1000, 9999)}",
+                    PeriodId = period.Id,
+                    Nickname = createOrderDTO.Nickname,
+                    Email = createOrderDTO.Email,
+                    SocialId = createOrderDTO.SocialId,
+                    SocialUrl = createOrderDTO.SocialUrl,
+                    CommissionTypeId = createOrderDTO.CommissionTypeId,
+                    CommissionSetting = createOrderDTO.CommissionSetting,
+                    PaymentStatus = 1,
+                    WorkStatus = 1,
+                    SelectionStatus = 1,
+                    AdminNote = null,
+                    ScheduledDate = null,
+                    CreatedAt = createdAt
+                };
+
+                await _context.CommissionOrders.AddAsync(newOrder);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            } 
+            catch
+            { 
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 }

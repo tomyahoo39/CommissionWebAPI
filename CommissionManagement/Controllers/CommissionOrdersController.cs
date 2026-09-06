@@ -38,13 +38,13 @@ public class CommissionOrdersController : ControllerBase
 
 
     [HttpPut("Date/{id}")]
-    public async Task<IActionResult> UpdateOrderDate (int id, [FromBody] OrderUpdateDTO updateDto)
+    public async Task<IActionResult> UpdateOrderDate(int id, [FromBody] OrderUpdateDTO updateDto)
     {
         if (updateDto == null)
         {
             return BadRequest("更新資料不能為空");
         }
-        
+
         var result = await _service.UpdateOrder(id, updateDto);
         if (result == false)
         {
@@ -70,8 +70,6 @@ public class CommissionOrdersController : ControllerBase
     {
         try
         {
-
-
             var orders = await _service.ShowOrderGuest();
             if (orders == null || !orders.Any())
             {
@@ -82,6 +80,24 @@ public class CommissionOrdersController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"查詢過程中發生錯誤: {ex.Message}");
+        }
+    }
+
+    [HttpPost("NewOrder")]
+    public async Task<IActionResult> CreateNewOrder([FromBody] CreateOrderDTO createOrderDTO)
+    {
+        if (createOrderDTO == null)
+        {
+            return BadRequest("委託單資料不能為空");
+        }
+        try
+        {
+            await _service.CreateNewOrder(createOrderDTO);
+            return Ok("委託單建立成功");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"建立委託單過程中發生錯誤: {ex.Message}");
         }
     }
 }

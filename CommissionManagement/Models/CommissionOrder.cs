@@ -19,7 +19,7 @@ public partial class CommissionOrder
 
     public int? SocialId { get; set; }
 
-    public string SocialUrl { get; set; }
+    public string? SocialUrl { get; set; }
 
     public int CommissionTypeId { get; set; }
 
@@ -31,7 +31,7 @@ public partial class CommissionOrder
 
     public int SelectionStatus { get; set; }
 
-    public string AdminNote { get; set; }
+    public string? AdminNote { get; set; }
 
     public DateOnly? ScheduledDate { get; set; }
 

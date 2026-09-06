@@ -5,13 +5,15 @@ namespace CommissionManagement.Services.CommissionOrderSer
     public interface ICommissionOrderService
     {
 
-        public Task<DrawResultDTO> DrawOrdersAsync(DrawDTO drawDto);
+        Task<DrawResultDTO> DrawOrdersAsync(DrawDTO drawDto);
 
-        public Task<bool> UpdateOrder(int Id, OrderUpdateDTO updateDto);
+        Task<bool> UpdateOrder(int Id, OrderUpdateDTO updateDto);
 
-        public Task<IEnumerable<ShowAllOrder>> ShowOrderAdmin(int periodId);
+        Task<IEnumerable<ShowAllOrder>> ShowOrderAdmin(int periodId);
 
-        public Task<IEnumerable<ShowOrderGuest>> ShowOrderGuest();
+        Task<IEnumerable<ShowOrderGuest>> ShowOrderGuest();
+
+        Task CreateNewOrder(CreateOrderDTO createOrderDTO);
 
     }
 }
