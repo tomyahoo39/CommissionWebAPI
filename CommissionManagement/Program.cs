@@ -3,6 +3,7 @@ using CommissionManagement.Models;
 using CommissionManagement.Services.QaSettingSer;
 using CommissionManagement.Services.QaQuestionSer;
 using CommissionManagement.Services.CommissionOrderSer;
+using CommissionManagement.Services.SocialPlatformSer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQaSettingService, QaSettingService>();
 builder.Services.AddScoped<IQaQuestionService, QaQuestionService>();
 builder.Services.AddScoped<ICommissionOrderService, CommissionOrderService>();
+builder.Services.AddScoped<ISocialPlatformService, SocialPlatformService>();
 
 var app = builder.Build();
 
