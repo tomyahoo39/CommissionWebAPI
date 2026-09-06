@@ -5,6 +5,7 @@ using CommissionManagement.Services.QaQuestionSer;
 using CommissionManagement.Services.CommissionOrderSer;
 using CommissionManagement.Services.SocialPlatformSer;
 using CommissionManagement.Services.CommissionTypeSer;
+using CommissionManagement.Services.CommissionPeriodSer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IQaQuestionService, QaQuestionService>();
 builder.Services.AddScoped<ICommissionOrderService, CommissionOrderService>();
 builder.Services.AddScoped<ISocialPlatformService, SocialPlatformService>();
 builder.Services.AddScoped<ICommissionTypeService, CommissionTypeService>();
+builder.Services.AddScoped<ICommissionPeriodService, CommissionPeriodService>();
 
 var app = builder.Build();
 
