@@ -66,24 +66,27 @@
 ### 安裝與執行步驟
 
 1. **複製專案 (Clone Repository)**
-   透過 Visual Studio 選取「複製存放庫」或使用 CLI 複製：
-   ```bash
-   git clone https://github.com/tomyahoo39/CommissionManagement.git
+透過 Visual Studio 選取「複製存放庫」或使用 CLI 複製：
+```bash
+git clone https://github.com/tomyahoo39/CommissionManagement.git
+
+```
 
 
 2. **設定資料庫連接字串**
-於 appsettings.json 或 appsettings.Development.json 中確認資料庫連接字串：
+於 `appsettings.json` 或 `appsettings.Development.json` 中確認資料庫連接字串：
+```json
 {
   "ConnectionStrings": {
     "CommissionContext": "Server=(localdb)\\mssqllocaldb;Database=Commission;Trusted_Connection=True;MultipleActiveResultSets=true"
   }
 }
 
+```
+
 3. **啟動專案與檢視 API 文件**
-
-透過 Visual Studio 按下 F5 或執行 dotnet run 啟動專案。
-
-專案啟動後，瀏覽器前往 https://localhost:xxxx/swagger（xxxx 為主控台輸出的 Port 號）即可存取 Swagger API 文件進行測試。
+* 透過 Visual Studio 按下 `F5` 或執行 `dotnet run` 啟動專案。
+* 專案啟動後，瀏覽器前往 `https://localhost:xxxx/swagger`（`xxxx` 為主控台輸出的 Port 號）即可存取 Swagger API 文件進行測試。
 
 
 
