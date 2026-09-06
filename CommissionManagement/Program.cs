@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using CommissionManagement.Models;
 using CommissionManagement.Services.QaSettingSer;
 using CommissionManagement.Services.QaQuestionSer;
+using CommissionManagement.Services.CommissionOrderSer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IQaSettingService, QaSettingService>();
 builder.Services.AddScoped<IQaQuestionService, QaQuestionService>();
+builder.Services.AddScoped<ICommissionOrderService, CommissionOrderService>();
 
 var app = builder.Build();
 
