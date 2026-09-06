@@ -1,5 +1,6 @@
 ﻿using CommissionManagement.DTO.SocialPlatformDTO;
 using CommissionManagement.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommissionManagement.Services.SocialPlatformSer
 {
@@ -10,6 +11,19 @@ namespace CommissionManagement.Services.SocialPlatformSer
         public SocialPlatformService(CommissionContext context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<ShowSocialDTO>> ShowSocial()
+        {
+            var social = await _context.SocialPlatforms
+                .Select(s => new ShowSocialDTO
+                {
+                    Id = s.Id,
+                    SocialName = s.SocialName
+                })
+                .ToListAsync();
+
+            return social;
         }
 
         public async Task Create(SocialCreateDTO socialCreateDTO)
@@ -36,5 +50,7 @@ namespace CommissionManagement.Services.SocialPlatformSer
             await _context.SaveChangesAsync();
             return true;
         }
+
+
     }
 }

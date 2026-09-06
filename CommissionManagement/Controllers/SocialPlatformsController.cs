@@ -14,8 +14,15 @@ public class SocialPlatformsController : ControllerBase
         _service = service;
     }
 
+    [HttpGet("AllSocial")]   
+    public async Task<IActionResult> ShowSocial()
+    {
+        var socials = await _service.ShowSocial();
+        return Ok(socials);
+    }
+
     [HttpPost("Social")]
-    public async Task<IActionResult> CreateSocial([FromBody] SocialCreateDTO CreateDTO)
+    public async Task<ActionResult> CreateSocial([FromBody] SocialCreateDTO CreateDTO)
     {
         if (CreateDTO == null)
         {
