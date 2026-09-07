@@ -13,7 +13,7 @@ namespace CommissionManagement.Services.CommissionOrderSer
             _context = context;
         }
 
-        public async Task<DrawResultDTO> DrawOrdersAsync(DrawDTO drawDto)
+        public async Task<DrawResultDTO> DrawOrders(DrawDTO drawDto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -102,6 +102,75 @@ namespace CommissionManagement.Services.CommissionOrderSer
             return true;
         }
 
+        public async Task<DrawResultDTO> ReDrawOrders(DrawDTO drawDto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var drawCountLimit = await _context.CommissionPeriods
+                    .Where(p => p.Id == drawDto.PeriodId)
+                    .Select(p => p.MaxWinners)
+                    .FirstOrDefaultAsync();
+
+                var selectedOrders = await _context.CommissionOrders
+                    .Where(o => o.PeriodId == drawDto.PeriodId && o.SelectionStatus == 2)
+                    .CountAsync();
+
+                var reDrawCount = drawCountLimit - selectedOrders;
+
+                if(reDrawCount <= 0)
+                {
+                    throw new InvalidOperationException("已達委託期人數上限，無法再進行重抽");
+                }
+
+                if (drawDto.DrawCount > reDrawCount)
+                {
+                    throw new InvalidOperationException($"請求補抽人數 {drawDto.DrawCount} 超出剩餘名額上限 {reDrawCount}");
+                }
+
+                var waitingOrders = await _context.CommissionOrders
+                    .Where(o => o.PeriodId == drawDto.PeriodId && o.SelectionStatus == 1)
+                    .ToListAsync();
+
+                int totalNumber = waitingOrders.Count;
+                if (totalNumber == 0)
+                {
+                    throw new InvalidOperationException("該委託期無等待抽選的委託單");
+                }
+
+                var random = new Random();
+                //打亂順序排列
+                var shuffledOrders = waitingOrders.OrderBy(o => random.Next()).ToList();
+                //選出最小值數量 避免抽籤人數大於總人數出問題
+                int actualDrawCount = Math.Min(drawDto.DrawCount, totalNumber);
+                //從亂數清單中索引值0開始取出指定數量的委託單
+                var reSelectedOrders = shuffledOrders.Take(actualDrawCount).ToList();
+
+
+                foreach (var order in reSelectedOrders)
+                {
+                    order.SelectionStatus = 2;
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return new DrawResultDTO
+                {
+                    TotalNumber = totalNumber,
+                    SelectedNumber = reSelectedOrders.Count,
+                    SelectedOrderIds = reSelectedOrders.Select(o => o.Id).ToList()
+                };
+
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<ShowAllOrder>> ShowOrderAdmin(int periodId)
         {
             var orders = await (
@@ -127,7 +196,9 @@ namespace CommissionManagement.Services.CommissionOrderSer
                     AdminNote = o.AdminNote,
                     ScheduledDate = o.ScheduledDate,
                     CreatedAt = o.CreatedAt
-                }).ToListAsync();
+                })
+                .OrderBy(o => o.ScheduledDate)
+                .ToListAsync();
 
             return orders;
         }
@@ -161,7 +232,9 @@ namespace CommissionManagement.Services.CommissionOrderSer
                     PaymentStatus = o.PaymentStatus,
                     WorkStatus = o.WorkStatus,
                     ScheduledDate = o.ScheduledDate
-                }).ToListAsync();
+                })
+                .OrderBy(o => o.ScheduledDate)
+                .ToListAsync();
 
             return orders;
         }

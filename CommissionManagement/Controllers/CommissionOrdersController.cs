@@ -14,7 +14,7 @@ public class CommissionOrdersController : ControllerBase
         _service = service;
     }
 
-    [HttpPost("draw")]
+    [HttpPost("Draw")]
     public async Task<ActionResult<DrawResultDTO>> DrawOrders([FromBody] DrawDTO drawDto)
     {
         if (drawDto.DrawCount <= 0)
@@ -24,7 +24,7 @@ public class CommissionOrdersController : ControllerBase
 
         try
         {
-            var reuslt = await _service.DrawOrdersAsync(drawDto);
+            var reuslt = await _service.DrawOrders(drawDto);
             return Ok(reuslt);
         }
         catch (Exception ex)
@@ -52,6 +52,28 @@ public class CommissionOrdersController : ControllerBase
         }
 
         return Ok();
+    }
+
+    [HttpPost("ReDraw")]
+    public async Task<ActionResult<DrawResultDTO>> ReDrawOrders([FromBody] DrawDTO drawDto)
+    {
+        if (drawDto.DrawCount <= 0)
+        {
+            return BadRequest("抽籤數量必須大於0");
+        }
+
+        try
+        {
+            var reuslt = await _service.ReDrawOrders(drawDto);
+            return Ok(reuslt);
+        }
+        catch (Exception ex)
+        {
+            {
+                return StatusCode(500, $"抽籤過程中發生錯誤: {ex.Message}");
+            }
+
+        }
     }
 
     [HttpGet("Orders/{periodId}")]
