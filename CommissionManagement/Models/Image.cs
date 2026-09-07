@@ -15,6 +15,8 @@ public partial class Image
 
     public string ImagePath { get; set; }
 
+    public string ThumbPath { get; set; }
+
     public int SortOrder { get; set; }
 
     public bool IsVisible { get; set; }

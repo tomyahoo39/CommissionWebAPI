@@ -6,6 +6,7 @@ using CommissionManagement.Services.CommissionOrderSer;
 using CommissionManagement.Services.SocialPlatformSer;
 using CommissionManagement.Services.CommissionTypeSer;
 using CommissionManagement.Services.CommissionPeriodSer;
+using CommissionManagement.Services.ImagesSer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.AddScoped<ICommissionOrderService, CommissionOrderService>();
 builder.Services.AddScoped<ISocialPlatformService, SocialPlatformService>();
 builder.Services.AddScoped<ICommissionTypeService, CommissionTypeService>();
 builder.Services.AddScoped<ICommissionPeriodService, CommissionPeriodService>();
+builder.Services.AddScoped<IImagesService, ImagesService>();
+builder.Services.AddScoped<IImageDatabaseService, ImageDatabaseService>();
 
 var app = builder.Build();
 
