@@ -55,12 +55,12 @@ namespace CommissionManagement.Services.ImagesSer
             //把image圖片複製一份，並進行縮放處理
             //ResizeMode.Max代表原圖比例縮放，使最長邊不超過指定尺寸
             //ResizeMode.Crop代表按比例縮放後，從正中央裁切成指定尺寸
-            using (var mainImage = image.Clone(x => x.Resize(new ResizeOptions {Size= new Size(720,1280),Mode = ResizeMode.Max })))
+            using (var mainImage = image.Clone(x => x.Resize(new ResizeOptions {Size= new Size(1400,1400),Mode = ResizeMode.Max })))
             {
                 //使用WebpEncoder將圖片轉成WebP格式儲存，並設定壓縮品質為80
                 await mainImage.SaveAsync(mainFilePath, new WebpEncoder { Quality = 80 });
             }
-            using (var thumbImage = image.Clone(x => x.Resize(new ResizeOptions {Size= new Size(150,150),Mode = ResizeMode.Crop })))
+            using (var thumbImage = image.Clone(x => x.Resize(new ResizeOptions {Size= new Size(600,600),Mode = ResizeMode.Max })))
             {
                 await thumbImage.SaveAsync(thumbFilePath, new WebpEncoder { Quality = 75 });
             }
