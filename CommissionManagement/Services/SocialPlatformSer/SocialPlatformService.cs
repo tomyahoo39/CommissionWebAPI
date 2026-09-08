@@ -19,7 +19,8 @@ namespace CommissionManagement.Services.SocialPlatformSer
                 .Select(s => new ShowSocialDTO
                 {
                     Id = s.Id,
-                    SocialName = s.SocialName
+                    SocialName = s.SocialName,
+                    IsActive = s.IsActive
                 })
                 .ToListAsync();
 
@@ -37,7 +38,7 @@ namespace CommissionManagement.Services.SocialPlatformSer
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Update(int id, SocialUpdateDTO socialUpdateDTO)
         {
             var social = await _context.SocialPlatforms.FindAsync(id);
 
@@ -46,7 +47,9 @@ namespace CommissionManagement.Services.SocialPlatformSer
                 return false;
             }
 
-            _context.SocialPlatforms.Remove(social);
+            social.SocialName = socialUpdateDTO.SocialName;
+            social.IsActive = socialUpdateDTO.IsActive;
+
             await _context.SaveChangesAsync();
             return true;
         }

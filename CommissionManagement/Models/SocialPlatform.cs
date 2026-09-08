@@ -10,4 +10,6 @@ public partial class SocialPlatform
     public int Id { get; set; }
 
     public string SocialName { get; set; }
+
+    public bool IsActive { get; set; } = true;
 }

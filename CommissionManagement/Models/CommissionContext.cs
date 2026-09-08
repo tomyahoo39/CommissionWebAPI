@@ -189,11 +189,14 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<SocialPlatform>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__social_p__3213E83F5ADED619");
+            entity.HasKey(e => e.Id).HasName("PK__social_p__3213E83F9E1755A7");
 
             entity.ToTable("social_platform");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("isActive");
             entity.Property(e => e.SocialName)
                 .IsRequired()
                 .HasMaxLength(20)

@@ -33,10 +33,10 @@ public class SocialPlatformsController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("Social/{id}")]
-    public async Task<IActionResult> DeleteSocial(int id)
+    [HttpPut("Social/{id}")]
+    public async Task<IActionResult> UpdateSocial(int id, [FromBody] SocialUpdateDTO socialUpdateDTO)
     {
-        var result = await _service.Delete(id);
+        var result = await _service.Update(id, socialUpdateDTO);
         if (result == false)
         {
             return NotFound("社群選項不存在");

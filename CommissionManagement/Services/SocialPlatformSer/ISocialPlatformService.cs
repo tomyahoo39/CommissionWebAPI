@@ -8,6 +8,6 @@ namespace CommissionManagement.Services.SocialPlatformSer
 
         Task Create(SocialCreateDTO socialCreateDTO);
 
-        Task<bool> Delete(int id);
+        Task<bool> Update(int id, SocialUpdateDTO socialUpdateDTO);
     }
 }
