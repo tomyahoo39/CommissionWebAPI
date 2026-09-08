@@ -2,7 +2,7 @@
 
 namespace CommissionManagement.DTO.ImagesDTO
 {
-    public class ImageUploadDto
+    public class ImageUploadDTO
     {
         [Required(ErrorMessage = "請選擇分類")]
         public int CommissionTypeId { get; set; }

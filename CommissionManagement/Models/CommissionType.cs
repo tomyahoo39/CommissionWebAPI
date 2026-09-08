@@ -10,4 +10,10 @@ public partial class CommissionType
     public int Id { get; set; }
 
     public string TypeName { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public bool IsHomeVisible { get; set; }
+
+    public int HomeSortOrder { get; set; }
 }

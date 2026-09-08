@@ -15,7 +15,7 @@ public class ImagesController : ControllerBase
     }
 
     [HttpPost("Upload")]
-    public async Task<IActionResult> UploadNewImage([FromForm] ImageUploadDto dto)
+    public async Task<IActionResult> UploadNewImage([FromForm] ImageUploadDTO dto)
     {
         try
         {

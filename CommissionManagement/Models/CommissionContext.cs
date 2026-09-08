@@ -31,7 +31,7 @@ public partial class CommissionContext : DbContext
     {
         modelBuilder.Entity<CommissionOrder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F7EE24FF7");
+            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83FE6E865F1");
 
             entity.ToTable("commission_order");
 
@@ -80,7 +80,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<CommissionPeriod>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F4D12CCB0");
+            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F46F6D7EE");
 
             entity.ToTable("commission_period");
 
@@ -100,11 +100,16 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<CommissionType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F3AE383F0");
+            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F66619340");
 
             entity.ToTable("commission_type");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.HomeSortOrder).HasColumnName("home_sort_order");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.IsHomeVisible).HasColumnName("is_home_visible");
             entity.Property(e => e.TypeName)
                 .IsRequired()
                 .HasMaxLength(30)
@@ -113,7 +118,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<Image>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__images__3213E83F29C792E6");
+            entity.HasKey(e => e.Id).HasName("PK__images__3213E83FDE2552E8");
 
             entity.ToTable("images");
 
@@ -143,7 +148,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<QaQuestion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__qa_quest__3213E83FE18B30C3");
+            entity.HasKey(e => e.Id).HasName("PK__qa_quest__3213E83FAB66BCDD");
 
             entity.ToTable("qa_question");
 
@@ -161,7 +166,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<QaSetting>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__qa_setti__3213E83FA65C8E62");
+            entity.HasKey(e => e.Id).HasName("PK__qa_setti__3213E83F991D1EC8");
 
             entity.ToTable("qa_setting");
 
@@ -184,7 +189,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<SocialPlatform>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__social_p__3213E83F55755D15");
+            entity.HasKey(e => e.Id).HasName("PK__social_p__3213E83F5ADED619");
 
             entity.ToTable("social_platform");
 

@@ -4,6 +4,9 @@ namespace CommissionManagement.Services.ImagesSer
 {
     public interface IImageDatabaseService
     {
-        Task UploadNewImage(ImageUploadDto dto);
+        Task<IEnumerable<GetFirstImageDTO>> GetFirstImages();
+        Task UploadNewImage(ImageUploadDTO dto);
+
+
     }
 }

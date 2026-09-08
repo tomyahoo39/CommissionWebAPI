@@ -14,7 +14,13 @@ namespace CommissionManagement.Services.ImagesSer
             _service = service;
             _context = context;
         }
-        public async Task UploadNewImage(ImageUploadDto dto)
+
+        public Task<IEnumerable<GetFirstImageDTO>> GetFirstImages()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UploadNewImage(ImageUploadDTO dto)
         {
             var category = await _context.CommissionTypes.AnyAsync(c => c.Id == dto.CommissionTypeId);
             if (!category)

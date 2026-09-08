@@ -37,31 +37,26 @@ public class CommissionTypesController : ControllerBase
     }
 
     [HttpPut("UpdateType/{id}")]
-    public async Task<IActionResult> UpdateType(int id, [FromBody] CreateTypeDTO updateDto)
+    public async Task<IActionResult> UpdateType(int id, [FromBody] UpdateTypeDTO updateDto)
     {
-        if(updateDto == null)
+        if (updateDto == null)
         {
             return BadRequest("請輸入委託類型");
         }
 
-        var result = await _service.UpdateType(id, updateDto);
-
-        if(result == false)
+        try
         {
-            return NotFound("委託類型未找到");
-        }
-        return Ok(result);
-    }
+            var result = await _service.UpdateType(id, updateDto);
 
-    [HttpDelete("DeleteType/{id}")]
-    public async Task<IActionResult> DeleteType(int id)
-    {
-        var result = await _service.DeleteType(id);
-        if (result == false)
+            if (result == false)
+            {
+                return NotFound("委託類型未找到");
+            }
+            return Ok(result);
+        }
+        catch (Exception ex)
         {
-            return NotFound("委託類型未找到");
+            return StatusCode(500, $"更新委託類型時發生錯誤: {ex.Message}");
         }
-        return Ok(result);
     }
-
 }

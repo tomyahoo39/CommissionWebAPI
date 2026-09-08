@@ -1,9 +1,7 @@
 ﻿namespace CommissionManagement.DTO.CommissionTypeDTO
 {
-    public class ShowTypeDTO
+    public class UpdateTypeDTO
     {
-        public int Id { get; set; }
-
         public string TypeName { get; set; }
 
         public bool IsActive { get; set; }

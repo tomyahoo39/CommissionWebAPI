@@ -7,8 +7,6 @@ namespace CommissionManagement.Services.CommissionTypeSer
         Task<IEnumerable<ShowTypeDTO>> ShowAllType();
         Task Create(CreateTypeDTO createDto);
 
-        Task<bool> UpdateType(int id ,CreateTypeDTO updateDto);
-
-        Task<bool> DeleteType(int id);
+        Task<bool> UpdateType(int id ,UpdateTypeDTO updateDto);
     }
 }
