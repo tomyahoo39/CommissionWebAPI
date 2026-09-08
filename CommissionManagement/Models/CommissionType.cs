@@ -16,4 +16,6 @@ public partial class CommissionType
     public bool IsHomeVisible { get; set; }
 
     public int HomeSortOrder { get; set; }
+
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 }

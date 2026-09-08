@@ -15,9 +15,117 @@ namespace CommissionManagement.Services.ImagesSer
             _context = context;
         }
 
-        public Task<IEnumerable<GetFirstImageDTO>> GetFirstImages()
+        public async Task<IEnumerable<GetFirstImageDTO>> GetFirstImages()
         {
-            throw new NotImplementedException();
+            var firstImages = await _context.CommissionTypes
+                .Where(c => c.IsActive && c.IsHomeVisible)
+                .OrderBy(c => c.HomeSortOrder)
+                .Take(4)
+                .Select(c => new GetFirstImageDTO
+                {
+                    CommissionTypeId = c.Id,
+                    TypeName = c.TypeName,
+                    HomeSortOrder = c.HomeSortOrder,
+                    Title = c.Images
+                    .Where(i => i.IsVisible)
+                    .OrderBy(i => i.SortOrder)
+                    .Select(i => i.Title)
+                    .FirstOrDefault(),
+                    ThumbPath = c.Images
+                    .Where(i => i.IsVisible)
+                    .OrderBy(i => i.SortOrder)
+                    .Select(i => i.ThumbPath)
+                    .FirstOrDefault(),
+                })
+                .ToListAsync();
+            return firstImages;
+        }
+
+        public async Task<IEnumerable<GetAllImageDTO>> ShowAllImages(int? commissionTypeId)
+        {
+            var query = _context.Images.Where(i => i.IsVisible);
+
+            var type = await _context.CommissionTypes
+                .OrderByDescending(c => c.Id)
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
+
+            if(commissionTypeId > type || commissionTypeId < 1)
+            {
+                throw new Exception("輸入委託項目不存在");
+            }
+
+            if(commissionTypeId.HasValue && commissionTypeId > 0)
+            {
+                query = query.Where(i => i.CommissionTypeId == commissionTypeId.Value);
+            }
+
+            var images = await query
+                .OrderBy(i => i.SortOrder)
+                .Select(i => new GetAllImageDTO
+                {
+                    CommissionTypeId = i.CommissionTypeId,
+                    Title = i.Title,
+                    ImagePath = i.ImagePath,
+                    ThumbPath = i.ThumbPath,
+                    SortOrder = i.SortOrder
+                })
+                .ToListAsync(); 
+            return images;
+        }
+
+        public async Task<IEnumerable<GetAllImagesAdminDTO>> ShowAllImagesAdmin(int? commissionTypeId)
+        {
+            var query = _context.Images.AsQueryable();
+
+            var type = await _context.CommissionTypes
+                .OrderByDescending(c => c.Id)
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
+
+            if (commissionTypeId > type || commissionTypeId < 1)
+            {
+                throw new Exception("輸入委託項目不存在");
+            }
+
+            if (commissionTypeId.HasValue && commissionTypeId > 0)
+            {
+                query = query.Where(i => i.CommissionTypeId == commissionTypeId.Value);
+            }
+
+            var images = await query
+                .OrderBy(i => i.SortOrder)
+                .Select(i => new GetAllImagesAdminDTO
+                {
+                    Id = i.Id,
+                    CommissionTypeId = i.CommissionTypeId,
+                    Title = i.Title,
+                    ImagePath = i.ImagePath,
+                    ThumbPath = i.ThumbPath,
+                    SortOrder = i.SortOrder,
+                    IsVisible = i.IsVisible,
+                    CreatedAt = i.CreatedAt,
+                    UpdatedAt = i.UpdatedAt
+                })
+                .ToListAsync(); return images;
+        }
+
+        public async Task<bool> Update(int id, UpdateImageDTO dto)
+        {
+            var image = await _context.Images.FindAsync(id);
+            if(image == null)
+            {
+                return false;
+            }
+
+            image.CommissionTypeId = dto.CommissionTypeId;
+            image.Title = dto.Title;
+            image.SortOrder = dto.SortOrder;
+            image.IsVisible = dto.IsVisible;
+            image.UpdatedAt = DateOnly.FromDateTime(DateTime.Now);
+
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task UploadNewImage(ImageUploadDTO dto)
