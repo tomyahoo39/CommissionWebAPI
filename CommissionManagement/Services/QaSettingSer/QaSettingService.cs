@@ -47,12 +47,16 @@ namespace CommissionManagement.Services.QaSettingSer
 
         public async Task Create(QaSettingServiceCreateDTO newQa)
         {
+            var sort = await _context.QaSettings
+                .OrderByDescending(q => q.SortOrder)
+                .Select(q => q.SortOrder).FirstOrDefaultAsync();
+
             var qaSetting = new QaSetting
             {
                 Question = newQa.Question,
                 Answer = newQa.Answer,
-                SortOrder = newQa.SortOrder,
-                IsVisible = newQa.IsVisible
+                SortOrder = sort + 1,
+                IsVisible = true
             };
 
             await _context.QaSettings.AddAsync(qaSetting);
