@@ -9,7 +9,7 @@ namespace CommissionManagement.Services.QaSettingSer
 
         Task Create(QaSettingServiceCreateDTO newQa);
 
-        Task<bool> Update(int id, QaSettingServiceDTO updatedQa);
+        Task<bool> Update(QaSettingServiceDTO updatedQa);
 
         Task<bool> Delete(int id);
 

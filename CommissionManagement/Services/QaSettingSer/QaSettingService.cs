@@ -63,9 +63,9 @@ namespace CommissionManagement.Services.QaSettingSer
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> Update(int id, QaSettingServiceDTO updatedQa)
+        public async Task<bool> Update(QaSettingServiceDTO updatedQa)
         {
-            var query = await _context.QaSettings.FindAsync(id);
+            var query = await _context.QaSettings.FindAsync(updatedQa.Id);
             if(query == null)
             {
                return false;

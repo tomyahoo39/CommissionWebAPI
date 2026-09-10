@@ -36,10 +36,10 @@ public class QaSettingsController : ControllerBase
         return Ok();
     }
 
-    [HttpPut("Update/{id}")]
-    public async Task<IActionResult> UpdateQaSetting(int id, [FromBody] QaSettingServiceDTO updatedQa)
+    [HttpPut("Update")]
+    public async Task<IActionResult> UpdateQaSetting([FromBody] QaSettingServiceDTO updatedQa)
     {
-        var qa = await _service.Update(id, updatedQa);
+        var qa = await _service.Update(updatedQa);
         if(qa == false)
         {
             return NotFound();
