@@ -11,6 +11,9 @@ namespace CommissionManagement.DTO.CommissionOrderDTO
         [Required]
         public int WorkStatus { get; set; }
 
+        [Required]
+        public int SelectionStatus { get; set; }
+
         public string? AdminNote { get; set; }
     }
 

@@ -97,6 +97,7 @@ namespace CommissionManagement.Services.CommissionOrderSer
             order.WorkStatus = updateDto.WorkStatus;
             order.ScheduledDate = updateDto.ScheduledDate;
             order.AdminNote = updateDto.AdminNote;
+            order.SelectionStatus = updateDto.SelectionStatus;
 
             await _context.SaveChangesAsync();
 
