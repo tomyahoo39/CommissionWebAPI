@@ -190,6 +190,7 @@ namespace CommissionManagement.Services.CommissionOrderSer
                     Nickname = o.Nickname,
                     Email = o.Email,
                     SocialName = s != null ? s.SocialName : null,
+                    SocialUrl = o.SocialUrl,
                     TypeName = c.TypeName,
                     CommissionSetting = o.CommissionSetting,
                     PaymentStatus = o.PaymentStatus,

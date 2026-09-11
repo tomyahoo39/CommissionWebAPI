@@ -14,6 +14,8 @@
 
         public string SocialName { get; set; }
 
+        public string SocialUrl { get; set; }
+
         public string TypeName { get; set; }
 
         public string CommissionSetting { get; set; }
