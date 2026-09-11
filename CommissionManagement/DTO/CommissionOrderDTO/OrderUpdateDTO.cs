@@ -10,6 +10,8 @@ namespace CommissionManagement.DTO.CommissionOrderDTO
         public int PaymentStatus { get; set; }
         [Required]
         public int WorkStatus { get; set; }
+
+        public string? AdminNote { get; set; }
     }
 
 }
