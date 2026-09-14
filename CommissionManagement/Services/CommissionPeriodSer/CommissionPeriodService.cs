@@ -20,8 +20,10 @@ namespace CommissionManagement.Services.CommissionPeriodSer
                 .OrderByDescending(p => p.Id)
                 .Select(p => new PeriodDTO
                 {
+                    Title = p.Title,
                     OpenAt = p.OpenAt,
-                    CloseAt = p.CloseAt
+                    CloseAt = p.CloseAt,
+                    MaxWinners = p.MaxWinners,
                 }).FirstOrDefaultAsync();
 
             if (firstPeriod == null)
