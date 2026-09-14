@@ -30,7 +30,9 @@ namespace CommissionManagement.Services.CommissionTypeSer
         {
             var newType = new CommissionType
             {
-                TypeName = createDto.TypeName
+                TypeName = createDto.TypeName,
+                IsActive = true
+
             };
 
             await _context.CommissionTypes.AddAsync(newType);
