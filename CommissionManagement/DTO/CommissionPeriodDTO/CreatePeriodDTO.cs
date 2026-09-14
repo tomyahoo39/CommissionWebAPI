@@ -11,8 +11,6 @@ namespace CommissionManagement.DTO.CommissionPeriodDTO
         [Required]
         public DateOnly CloseAt { get; set; }
         [Required]
-        public byte Ststus { get; set; }
-        [Required]
         public byte? MaxWinners { get; set; }
     }
 }

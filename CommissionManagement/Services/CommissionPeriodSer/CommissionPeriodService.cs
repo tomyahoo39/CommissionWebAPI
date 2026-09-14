@@ -57,7 +57,7 @@ namespace CommissionManagement.Services.CommissionPeriodSer
                 Title = createPeriodDTO.Title,
                 OpenAt = createPeriodDTO.OpenAt,
                 CloseAt = createPeriodDTO.CloseAt,
-                Ststus = createPeriodDTO.Ststus,
+                Ststus = 1,
                 MaxWinners = createPeriodDTO.MaxWinners,
                 CreatedAt = DateOnly.FromDateTime(DateTime.Now)
             };
