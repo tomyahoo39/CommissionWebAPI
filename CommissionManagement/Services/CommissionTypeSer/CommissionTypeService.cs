@@ -13,6 +13,19 @@ namespace CommissionManagement.Services.CommissionTypeSer
             _context = context;
         }
 
+        public async Task<IEnumerable<ActiveTypeDTO>> GetActiveType()
+        {
+            var types = await _context.CommissionTypes
+                .Where(c => c.IsActive)
+                .Select(c => new ActiveTypeDTO
+                {
+                    Id = c.Id,
+                    TypeName = c.TypeName,
+                }).ToListAsync();
+
+            return types;
+        }
+
         public async Task<IEnumerable<ShowTypeDTO>> ShowAllType()
         {
             var Type = await _context.CommissionTypes.Select(x => new ShowTypeDTO

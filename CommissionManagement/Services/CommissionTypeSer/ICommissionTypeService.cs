@@ -4,6 +4,7 @@ namespace CommissionManagement.Services.CommissionTypeSer
 {
     public interface ICommissionTypeService
     {
+        Task<IEnumerable<ActiveTypeDTO>> GetActiveType();
         Task<IEnumerable<ShowTypeDTO>> ShowAllType();
         Task Create(CreateTypeDTO createDto);
 

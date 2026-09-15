@@ -13,6 +13,19 @@ namespace CommissionManagement.Services.SocialPlatformSer
             _context = context;
         }
 
+        public async Task<IEnumerable<ActiveSocialDTO>> ShowActiveSocial()
+        {
+            var social = await _context.SocialPlatforms
+                .Where(s => s.IsActive)
+                .Select(s => new ActiveSocialDTO
+                {
+                    Id = s.Id,
+                    SocialName = s.SocialName,
+                }).ToListAsync();
+
+            return social;
+        }
+
         public async Task<IEnumerable<ShowSocialDTO>> ShowSocial()
         {
             var social = await _context.SocialPlatforms
@@ -53,7 +66,5 @@ namespace CommissionManagement.Services.SocialPlatformSer
             await _context.SaveChangesAsync();
             return true;
         }
-
-
     }
 }

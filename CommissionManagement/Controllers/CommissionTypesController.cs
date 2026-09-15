@@ -14,6 +14,17 @@ public class CommissionTypesController : ControllerBase
         _service = service;
     }
 
+    [HttpGet("ActiveType")]
+    public async Task<ActionResult<IEnumerable<ActiveTypeDTO>>> ShowActiveType()
+    {
+        var type = await _service.GetActiveType();
+        if(type == null)
+        {
+            return NotFound();
+        }
+        return Ok(type);
+    }
+
     [HttpGet("Type")]
     public async Task<ActionResult<IEnumerable<ShowTypeDTO>>> ShowAllTypes()
     {
