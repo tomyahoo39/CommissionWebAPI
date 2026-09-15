@@ -19,6 +19,10 @@ namespace CommissionManagement.Services.CommissionOrderSer
 
             try
             {
+                var period = await _context.CommissionPeriods
+                    .Where(c => c.Id == drawDto.PeriodId)
+                    .FirstOrDefaultAsync();
+
                 var waitingOrders = await _context.CommissionOrders
                     .Where(o => o.PeriodId == drawDto.PeriodId && o.SelectionStatus == 1)
                     .ToListAsync();
@@ -52,6 +56,9 @@ namespace CommissionManagement.Services.CommissionOrderSer
                 {
                     order.SelectionStatus = 2;
                 }
+
+                period.Ststus = 2;
+                
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
