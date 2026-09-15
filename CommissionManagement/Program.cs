@@ -49,6 +49,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
