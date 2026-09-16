@@ -36,6 +36,17 @@ public class CommissionTypesController : ControllerBase
         return Ok(type);
     }
 
+    [HttpGet("IndexType")]
+    public async Task<ActionResult<IEnumerable<IndexTypeDTO>>> IndexTypes()
+    {
+        var type = await _service.IndexType();
+        if(type == null)
+        {
+            return NotFound();
+        }
+        return Ok(type);
+    }
+
     [HttpPost("NewType")]
     public async Task<IActionResult> CreateType([FromBody] CreateTypeDTO createDto)
     {

@@ -5,11 +5,9 @@ using System.Collections.Generic;
 
 namespace CommissionManagement.Models;
 
-public partial class SocialPlatform
+public partial class Config
 {
     public int Id { get; set; }
 
-    public string SocialName { get; set; }
-
-    public bool IsActive { get; set; }
+    public string NoticeContent { get; set; }
 }

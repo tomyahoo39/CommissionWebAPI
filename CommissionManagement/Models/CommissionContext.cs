@@ -19,6 +19,8 @@ public partial class CommissionContext : DbContext
 
     public virtual DbSet<CommissionType> CommissionTypes { get; set; }
 
+    public virtual DbSet<Config> Configs { get; set; }
+
     public virtual DbSet<Image> Images { get; set; }
 
     public virtual DbSet<QaQuestion> QaQuestions { get; set; }
@@ -31,7 +33,7 @@ public partial class CommissionContext : DbContext
     {
         modelBuilder.Entity<CommissionOrder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83FE6E865F1");
+            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F9D619D97");
 
             entity.ToTable("commission_order");
 
@@ -80,7 +82,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<CommissionPeriod>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F46F6D7EE");
+            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F28A0301D");
 
             entity.ToTable("commission_period");
 
@@ -100,25 +102,38 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<CommissionType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F66619340");
+            entity.HasKey(e => e.Id).HasName("PK__commissi__3213E83F7614CF76");
 
             entity.ToTable("commission_type");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.BasePrice).HasColumnName("basePrice");
+            entity.Property(e => e.FullDescription).HasColumnName("fullDescription");
             entity.Property(e => e.HomeSortOrder).HasColumnName("home_sort_order");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
             entity.Property(e => e.IsHomeVisible).HasColumnName("is_home_visible");
+            entity.Property(e => e.ShortDescription).HasColumnName("shortDescription");
             entity.Property(e => e.TypeName)
                 .IsRequired()
                 .HasMaxLength(30)
                 .HasColumnName("type_name");
         });
 
+        modelBuilder.Entity<Config>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__config__3213E83F0D3ED332");
+
+            entity.ToTable("config");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.NoticeContent).HasColumnName("noticeContent");
+        });
+
         modelBuilder.Entity<Image>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__images__3213E83FDE2552E8");
+            entity.HasKey(e => e.Id).HasName("PK__images__3213E83FEC3B7DA5");
 
             entity.ToTable("images");
 
@@ -148,7 +163,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<QaQuestion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__qa_quest__3213E83FAB66BCDD");
+            entity.HasKey(e => e.Id).HasName("PK__qa_quest__3213E83FFCFBE7F8");
 
             entity.ToTable("qa_question");
 
@@ -166,7 +181,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<QaSetting>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__qa_setti__3213E83F991D1EC8");
+            entity.HasKey(e => e.Id).HasName("PK__qa_setti__3213E83FA5C896B1");
 
             entity.ToTable("qa_setting");
 
@@ -189,7 +204,7 @@ public partial class CommissionContext : DbContext
 
         modelBuilder.Entity<SocialPlatform>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__social_p__3213E83F9E1755A7");
+            entity.HasKey(e => e.Id).HasName("PK__social_p__3213E83F87B8FB21");
 
             entity.ToTable("social_platform");
 

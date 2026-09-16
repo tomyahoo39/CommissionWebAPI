@@ -6,6 +6,8 @@ namespace CommissionManagement.Services.CommissionTypeSer
     {
         Task<IEnumerable<ActiveTypeDTO>> GetActiveType();
         Task<IEnumerable<ShowTypeDTO>> ShowAllType();
+
+        Task<IEnumerable<IndexTypeDTO>> IndexType();
         Task Create(CreateTypeDTO createDto);
 
         Task<bool> UpdateType(int id ,UpdateTypeDTO updateDto);

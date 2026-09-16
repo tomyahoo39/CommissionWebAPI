@@ -34,18 +34,37 @@ namespace CommissionManagement.Services.CommissionTypeSer
                 TypeName = x.TypeName,
                 IsActive = x.IsActive,
                 IsHomeVisible = x.IsHomeVisible,
-                HomeSortOrder = x.HomeSortOrder
+                HomeSortOrder = x.HomeSortOrder,
+                BasePrice = x.BasePrice,
+                ShortDescription = x.ShortDescription,
+                FullDescription = x.FullDescription
             }).ToListAsync();
 
             return Type;
+        }
+
+        public async Task<IEnumerable<IndexTypeDTO>> IndexType()
+        {
+            var type = await _context.CommissionTypes
+                .Select(c => new IndexTypeDTO
+                {
+                    Id = c.Id,
+                    TypeName = c.TypeName,
+                    BasePrice = c.BasePrice,
+                    ShortDescription = c.ShortDescription
+                }).ToListAsync();
+
+            return type;
         }
         public async Task Create(CreateTypeDTO createDto)
         {
             var newType = new CommissionType
             {
                 TypeName = createDto.TypeName,
-                IsActive = true
-
+                IsActive = true,
+                BasePrice = createDto.BasePrice,
+                ShortDescription = createDto.ShortDescription,
+                FullDescription = createDto.FullDescription
             };
 
             await _context.CommissionTypes.AddAsync(newType);
@@ -74,6 +93,9 @@ namespace CommissionManagement.Services.CommissionTypeSer
             type.IsActive = updateDto.IsActive;
             type.IsHomeVisible = updateDto.IsHomeVisible;
             type.HomeSortOrder = updateDto.HomeSortOrder;
+            type.BasePrice = updateDto.BasePrice;
+            type.ShortDescription = updateDto.ShortDescription;
+            type.FullDescription = updateDto.FullDescription;
 
             await _context.SaveChangesAsync();
             return true;

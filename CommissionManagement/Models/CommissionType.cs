@@ -17,5 +17,11 @@ public partial class CommissionType
 
     public int HomeSortOrder { get; set; }
 
+    public int? BasePrice { get; set; }
+
+    public string? ShortDescription { get; set; }
+
+    public string? FullDescription { get; set; }
+
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 }

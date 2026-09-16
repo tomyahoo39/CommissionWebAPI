@@ -1,12 +1,13 @@
-using Microsoft.EntityFrameworkCore;
 using CommissionManagement.Models;
-using CommissionManagement.Services.QaSettingSer;
-using CommissionManagement.Services.QaQuestionSer;
 using CommissionManagement.Services.CommissionOrderSer;
-using CommissionManagement.Services.SocialPlatformSer;
-using CommissionManagement.Services.CommissionTypeSer;
 using CommissionManagement.Services.CommissionPeriodSer;
+using CommissionManagement.Services.CommissionTypeSer;
 using CommissionManagement.Services.ImagesSer;
+using CommissionManagement.Services.IndexConfigSer;
+using CommissionManagement.Services.QaQuestionSer;
+using CommissionManagement.Services.QaSettingSer;
+using CommissionManagement.Services.SocialPlatformSer;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddScoped<ICommissionTypeService, CommissionTypeService>();
 builder.Services.AddScoped<ICommissionPeriodService, CommissionPeriodService>();
 builder.Services.AddScoped<IImagesService, ImagesService>();
 builder.Services.AddScoped<IImageDatabaseService, ImageDatabaseService>();
+builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
