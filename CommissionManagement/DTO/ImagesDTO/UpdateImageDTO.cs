@@ -8,7 +8,5 @@
         public int SortOrder { get; set; }
 
         public bool IsVisible { get; set; }
-
-        public DateOnly UpdatedAt { get; set; }
     }
 }
