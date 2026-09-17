@@ -1,3 +1,4 @@
+using CloudinaryDotNet;
 using CommissionManagement.Models;
 using CommissionManagement.Services.CommissionOrderSer;
 using CommissionManagement.Services.CommissionPeriodSer;
@@ -38,6 +39,15 @@ builder.Services.AddAuthentication(option =>
         };
     });
 
+var cloudinaryAccount = new Account(
+    builder.Configuration["Cloudinary:CloudName"],
+    builder.Configuration["Cloudunary:ApiKey"],
+    builder.Configuration["Cloudinary:ApiSecret"]
+    );
+
+var cloudinary = new Cloudinary(cloudinaryAccount);
+cloudinary.Api.Secure = true;
+builder.Services.AddSingleton(cloudinary);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
