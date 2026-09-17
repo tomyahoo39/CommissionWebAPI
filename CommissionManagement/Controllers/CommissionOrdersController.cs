@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CommissionManagement.Models;
 using CommissionManagement.Services.CommissionOrderSer;
 using CommissionManagement.DTO.CommissionOrderDTO;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -14,6 +15,7 @@ public class CommissionOrdersController : ControllerBase
         _service = service;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("Draw")]
     public async Task<ActionResult<DrawResultDTO>> DrawOrders([FromBody] DrawDTO drawDto)
     {
@@ -36,7 +38,7 @@ public class CommissionOrdersController : ControllerBase
         }
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpPut("Date/{id}")]
     public async Task<IActionResult> UpdateOrderDate(int id, [FromBody] OrderUpdateDTO updateDto)
     {
@@ -54,6 +56,7 @@ public class CommissionOrdersController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("ReDraw")]
     public async Task<ActionResult<DrawResultDTO>> ReDrawOrders([FromBody] DrawDTO drawDto)
     {
@@ -76,6 +79,7 @@ public class CommissionOrdersController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("Orders/{periodId}")]
     public async Task<ActionResult<IEnumerable<ShowAllOrder>>> ShowOrderAdmin(int periodId)
     {

@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using CommissionManagement.DTO.ConfigDTO;
 using CommissionManagement.Models;
 using CommissionManagement.Services.IndexConfigSer;
-using CommissionManagement.DTO.ConfigDTO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -26,6 +27,7 @@ public class ConfigsController : ControllerBase
         return Ok(notice);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("UpdateNotice/{id}")]
     public async Task<ActionResult> UpdateNotice(int id , [FromBody]UpdateNoticeDTO updateDto)
     {

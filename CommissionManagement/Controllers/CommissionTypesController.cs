@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using CommissionManagement.DTO.CommissionTypeDTO;
 using CommissionManagement.Models;
 using CommissionManagement.Services.CommissionTypeSer;
-using CommissionManagement.DTO.CommissionTypeDTO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -25,6 +26,7 @@ public class CommissionTypesController : ControllerBase
         return Ok(type);
     }
 
+    
     [HttpGet("Type")]
     public async Task<ActionResult<IEnumerable<ShowTypeDTO>>> ShowAllTypes()
     {
@@ -47,6 +49,7 @@ public class CommissionTypesController : ControllerBase
         return Ok(type);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("NewType")]
     public async Task<IActionResult> CreateType([FromBody] CreateTypeDTO createDto)
     {
@@ -58,6 +61,7 @@ public class CommissionTypesController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("UpdateType/{id}")]
     public async Task<IActionResult> UpdateType(int id, [FromBody] UpdateTypeDTO updateDto)
     {

@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using CommissionManagement.DTO.ImagesDTO;
 using CommissionManagement.Models;
 using CommissionManagement.Services.ImagesSer;
-using CommissionManagement.DTO.ImagesDTO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -35,6 +36,7 @@ public class ImagesController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("AllImagesAdmin")]
     public async Task<ActionResult<IEnumerable<GetAllImagesAdminDTO>>> GetAllImagesAdmin([FromQuery] int? commissionTypeId)
     {
@@ -49,6 +51,7 @@ public class ImagesController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("UpdateImage/{id}")]
     public async Task<IActionResult> UpdateImage(int id, [FromBody]UpdateImageDTO dto)
     {
@@ -65,6 +68,7 @@ public class ImagesController : ControllerBase
         return Ok(new { message = "圖片修改成功" });
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("Upload")]
     public async Task<IActionResult> UploadNewImage([FromForm] ImageUploadDTO dto)
     {

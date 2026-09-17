@@ -29,6 +29,8 @@ public partial class CommissionContext : DbContext
 
     public virtual DbSet<SocialPlatform> SocialPlatforms { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CommissionOrder>(entity =>
@@ -216,6 +218,27 @@ public partial class CommissionContext : DbContext
                 .IsRequired()
                 .HasMaxLength(20)
                 .HasColumnName("social_name");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07C55002B8");
+
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E449DD59CC").IsUnique();
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.PasswordHash)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.Role)
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasDefaultValue("Admin");
+            entity.Property(e => e.Username)
+                .IsRequired()
+                .HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);

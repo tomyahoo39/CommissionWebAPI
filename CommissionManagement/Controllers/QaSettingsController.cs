@@ -1,8 +1,9 @@
+using CommissionManagement.DTO.QaSettingDTO;
+using CommissionManagement.Models;
+using CommissionManagement.Services.QaSettingSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CommissionManagement.Models;
-using CommissionManagement.DTO.QaSettingDTO;
-using CommissionManagement.Services.QaSettingSer;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -14,6 +15,7 @@ public class QaSettingsController : ControllerBase
         _service = service;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("AdminQaSetting")]
     public async Task<ActionResult<IEnumerable<QaSettingServiceDTO>>> GetAllQaForAdmin()
     {
@@ -29,6 +31,7 @@ public class QaSettingsController : ControllerBase
         return Ok(qa);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("CreateQaSetting")]
     public async Task<IActionResult> CreateQaSetting([FromBody] QaSettingServiceCreateDTO newQa)
     {
@@ -36,6 +39,7 @@ public class QaSettingsController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("Update")]
     public async Task<IActionResult> UpdateQaSetting([FromBody] QaSettingServiceDTO updatedQa)
     {
@@ -48,6 +52,7 @@ public class QaSettingsController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteQaSetting(int id)
     {

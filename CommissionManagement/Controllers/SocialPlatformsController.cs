@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using CommissionManagement.DTO.SocialPlatformDTO;
 using CommissionManagement.Models;
 using CommissionManagement.Services.SocialPlatformSer;
-using CommissionManagement.DTO.SocialPlatformDTO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -25,6 +26,7 @@ public class SocialPlatformsController : ControllerBase
         return Ok(social);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("AllSocial")]   
     public async Task<IActionResult> ShowSocial()
     {
@@ -32,6 +34,7 @@ public class SocialPlatformsController : ControllerBase
         return Ok(socials);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("Social")]
     public async Task<ActionResult> CreateSocial([FromBody] SocialCreateDTO CreateDTO)
     {
@@ -44,6 +47,7 @@ public class SocialPlatformsController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("Social/{id}")]
     public async Task<IActionResult> UpdateSocial(int id, [FromBody] SocialUpdateDTO socialUpdateDTO)
     {

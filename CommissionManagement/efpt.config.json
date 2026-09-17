@@ -49,6 +49,10 @@
       {
          "Name": "[dbo].[social_platform]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Users]",
+         "ObjectType": 0
       }
    ],
    "UiHint": null,

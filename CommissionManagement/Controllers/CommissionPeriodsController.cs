@@ -1,6 +1,7 @@
 using CommissionManagement.DTO.CommissionPeriodDTO;
 using CommissionManagement.Models;
 using CommissionManagement.Services.CommissionPeriodSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ public class CommissionPeriodsController : ControllerBase
         return Ok(period);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("AllPeriods")]
     public async Task<ActionResult<IEnumerable<AllPeriodDTO>>> GetAllPeriods()
     {
@@ -28,6 +30,7 @@ public class CommissionPeriodsController : ControllerBase
         return Ok(periods);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("NewPeriod")]
     public async Task<IActionResult> CreatePeriod([FromBody] CreatePeriodDTO createPeriodDTO)
     {

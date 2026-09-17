@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CommissionManagement.Models;
 using CommissionManagement.DTO.QaQuestionDTO;
 using CommissionManagement.Services.QaQuestionSer;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -14,6 +15,7 @@ public class QaQuestionsController : ControllerBase
         _service = service;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("AllQa")]
     public async Task<ActionResult<IEnumerable<QaQuestionGetAllDTO>>> GetAllQaQuestion()
     {
