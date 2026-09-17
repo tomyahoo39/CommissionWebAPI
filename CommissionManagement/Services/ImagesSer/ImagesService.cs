@@ -1,19 +1,16 @@
-﻿using CommissionManagement.Models;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.Processing;
-using Image = SixLabors.ImageSharp.Image;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+
 
 namespace CommissionManagement.Services.ImagesSer
 {
     public class ImagesService : IImagesService
     {
-        //注入網站環境服務
-        private readonly IWebHostEnvironment _environment;
+        private readonly Cloudinary _cloudinary;
 
-        public ImagesService(IWebHostEnvironment environment)
+        public ImagesService(Cloudinary cloudinary)
         {
-            _environment = environment;
+            _cloudinary = cloudinary;
         }
 
         public async Task<(string ImagePath, string ThumbPath)> UploadAndProcess(Stream fileStream, string contentType)
@@ -25,47 +22,50 @@ namespace CommissionManagement.Services.ImagesSer
                 throw new ArgumentException("不支援的檔案格式，僅限上傳 JPG, PNG 或 WEBP 圖片。");
             }
 
-            //WebRootPath取得根目錄wwwroot的路徑
-            //若無法取得WebRootPath，則使用ContentRootPath取得專案根目錄，再組合出wwwroot的路徑
-            //Path.Combine組合路徑
-            var webRootPath = _environment.WebRootPath ?? Path.Combine(_environment.ContentRootPath,"wwwroot");
-            var mainsFolder = Path.Combine(webRootPath,"uploads","mains");
-            var thumbsFolder = Path.Combine(webRootPath,"uploads","thumbs");
+            if(fileStream.CanSeek && fileStream.Position != 0)
+            {
+                fileStream.Position = 0;
+            }
 
-            //如果uploads/mains資料夾不存在就建立
-            if (!Directory.Exists(mainsFolder))
-            {
-                Directory.CreateDirectory(mainsFolder);
-            }
-            if (!Directory.Exists(thumbsFolder))
-            {
-                Directory.CreateDirectory(thumbsFolder);
-            }
-            //生成唯一的檔案名稱，避免同名檔案上傳覆蓋
             var fileGuid = Guid.NewGuid().ToString();
-            //生成完整檔名
-            var fileName = $"{fileGuid}.webp";
 
-            var mainFilePath = Path.Combine(mainsFolder, fileName);
-            var thumbFilePath = Path.Combine(thumbsFolder, fileName);
+            var mainTransformation = new Transformation()
+                .Width(1400)
+                .Height(1400)
+                .Crop("limit")
+                .Quality(80)
+                .FetchFormat("webp");
 
-            //利用ImageSharp套件讀取圖片建立image變數代表
-            using var image = await Image.LoadAsync(fileStream);
+            var thumbTransformation = new Transformation()
+                .Width(600)
+                .Height(600)
+                .Crop("limit")
+                .Quality(75)
+                .FetchFormat("webp");
 
-            //把image圖片複製一份，並進行縮放處理
-            //ResizeMode.Max代表原圖比例縮放，使最長邊不超過指定尺寸
-            //ResizeMode.Crop代表按比例縮放後，從正中央裁切成指定尺寸
-            using (var mainImage = image.Clone(x => x.Resize(new ResizeOptions {Size= new Size(1400,1400),Mode = ResizeMode.Max })))
+            var uploadParams = new ImageUploadParams()
             {
-                //使用WebpEncoder將圖片轉成WebP格式儲存，並設定壓縮品質為80
-                await mainImage.SaveAsync(mainFilePath, new WebpEncoder { Quality = 80 });
-            }
-            using (var thumbImage = image.Clone(x => x.Resize(new ResizeOptions {Size= new Size(600,600),Mode = ResizeMode.Max })))
+                File = new FileDescription(fileGuid, fileStream),
+                Folder = "uploads",
+                PublicId = fileGuid,
+                EagerTransforms = new List<Transformation>
+                {
+                    mainTransformation,
+                    thumbTransformation
+                }
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if(uploadResult.Error != null)
             {
-                await thumbImage.SaveAsync(thumbFilePath, new WebpEncoder { Quality = 75 });
+                throw new Exception($"上傳圖片失敗: {uploadResult.Error.Message}");
             }
 
-            return ($"/uploads/mains/{fileName}", $"/uploads/thumbs/{fileName}");
+            var mainUrl = uploadResult.Eager[0].SecureUrl.ToString();
+            var thumbUrl = uploadResult.Eager[1].SecureUrl.ToString();
+
+            return (mainUrl, thumbUrl);
         }
     }
 }

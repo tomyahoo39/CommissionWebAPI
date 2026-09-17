@@ -41,7 +41,7 @@ builder.Services.AddAuthentication(option =>
 
 var cloudinaryAccount = new Account(
     builder.Configuration["Cloudinary:CloudName"],
-    builder.Configuration["Cloudunary:ApiKey"],
+    builder.Configuration["Cloudinary:ApiKey"],
     builder.Configuration["Cloudinary:ApiSecret"]
     );
 

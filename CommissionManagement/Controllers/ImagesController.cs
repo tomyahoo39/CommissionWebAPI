@@ -68,7 +68,7 @@ public class ImagesController : ControllerBase
         return Ok(new { message = "圖片修改成功" });
     }
 
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpPost("Upload")]
     public async Task<IActionResult> UploadNewImage([FromForm] ImageUploadDTO dto)
     {
