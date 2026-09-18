@@ -16,6 +16,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var SecretKey = jwtSettings["Key"];
@@ -73,7 +74,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+            policy.WithOrigins("http://localhost:5173", "http://localhost:4173")
+            .AllowAnyHeader().AllowAnyMethod();
         });
 });
 var app = builder.Build();
