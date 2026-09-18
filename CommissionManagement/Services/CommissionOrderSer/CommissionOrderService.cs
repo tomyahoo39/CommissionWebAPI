@@ -19,6 +19,15 @@ namespace CommissionManagement.Services.CommissionOrderSer
 
             try
             {
+                var periodFinishDraw = await _context.CommissionPeriods
+                    .Where(c => c.Id == drawDto.PeriodId && c.Ststus == 2)
+                    .FirstOrDefaultAsync();
+
+                if (periodFinishDraw != null)
+                {
+                    throw new InvalidOperationException("該委託期已完成抽籤");
+                }
+
                 var period = await _context.CommissionPeriods
                     .Where(c => c.Id == drawDto.PeriodId)
                     .FirstOrDefaultAsync();
