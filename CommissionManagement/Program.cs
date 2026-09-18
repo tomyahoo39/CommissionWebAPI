@@ -4,7 +4,6 @@ using CommissionManagement.Services.CommissionOrderSer;
 using CommissionManagement.Services.CommissionPeriodSer;
 using CommissionManagement.Services.CommissionTypeSer;
 using CommissionManagement.Services.ImagesSer;
-using CommissionManagement.Services.IndexConfigSer;
 using CommissionManagement.Services.QaQuestionSer;
 using CommissionManagement.Services.QaSettingSer;
 using CommissionManagement.Services.SocialPlatformSer;
@@ -67,7 +66,6 @@ builder.Services.AddScoped<ICommissionTypeService, CommissionTypeService>();
 builder.Services.AddScoped<ICommissionPeriodService, CommissionPeriodService>();
 builder.Services.AddScoped<IImagesService, ImagesService>();
 builder.Services.AddScoped<IImageDatabaseService, ImageDatabaseService>();
-builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddCors(options =>
 {
