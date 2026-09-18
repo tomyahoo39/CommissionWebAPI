@@ -37,6 +37,8 @@
 - `qa_question`：訪客 Q&A 提問與諮詢紀錄
 - `qa_setting`：管理者 Q&A 與「關於我」資訊
 - `images`：圖片上傳與展示紀錄管理
+- `config`：首頁委前須知說明
+- `Users`：JWT管理員的資料紀錄
 
 ---
 
