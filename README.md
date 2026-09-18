@@ -10,18 +10,18 @@
 
 - **Framework**: C# / ASP.NET Core Web API (.NET 10)
 - **Database**: MSSQL / Entity Framework Core (Database First)
-- **Authentication**: JWT (JSON Web Token) *(開發中)*
-- **Storage**: Azure Blob Storage / Cloudinary *(規劃中)*
+- **Authentication**: JWT (JSON Web Token) 
+- **Storage**: Cloudinary 
 - **Architecture**: Layered Architecture / Dependency Injection / DTO Pattern
 
 ---
 
 ## 🌟 核心功能 (Features)
 
-- [x] **委託項目管理**：CRUD 創作者的委託方案（價目表、委託規範）
-- [ ] **訂單狀態追蹤**：管理委託狀態（稿件狀態、付款狀態等）
-- [ ] **身份驗證與授權**：JWT Auth（區分「創作者」與「訪客」權限）
-- [ ] **作品與草稿圖片上傳**：整合雲端儲存 API
+- [✔] **委託項目管理**：CRUD 創作者的委託方案（價目表、委託規範）
+- [✔] **訂單狀態追蹤**：管理委託狀態（稿件狀態、付款狀態等）
+- [✔] **身份驗證與授權**：JWT Auth（區分「創作者」與「訪客」權限）
+- [✔] **作品與草稿圖片上傳**：整合雲端儲存 API
 - [ ] **雲端部署**：部署至 Azure / Render
 
 ---
@@ -37,6 +37,8 @@
 - `qa_question`：訪客 Q&A 提問與諮詢紀錄
 - `qa_setting`：管理者 Q&A 與「關於我」資訊
 - `images`：圖片上傳與展示紀錄管理
+- `config`：首頁委前須知說明
+- `Users`：JWT管理員的資料紀錄
 
 ---
 
