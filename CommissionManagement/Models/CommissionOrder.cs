@@ -23,8 +23,6 @@ public partial class CommissionOrder
 
     public int CommissionTypeId { get; set; }
 
-    public string CommissionSetting { get; set; }
-
     public int PaymentStatus { get; set; }
 
     public int WorkStatus { get; set; }
