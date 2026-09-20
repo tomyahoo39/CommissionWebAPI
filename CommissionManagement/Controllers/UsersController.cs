@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CommissionManagement.Models;
 using CommissionManagement.Services.UserSer;
 using CommissionManagement.DTO.LoginDTO;
+using Microsoft.AspNetCore.RateLimiting;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -14,16 +15,25 @@ public class UsersController : ControllerBase
         _service = service;
     }
 
+    [EnableRateLimiting("Login")]
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO login)
     {
-        var token = await _service.Login(login);
-        if(token == null)
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        try
         {
-            return Unauthorized(new {message = "帳號密碼錯誤"});
-        }
+            var token = await _service.Login(login, ip);
+            if(token == null)
+            {
+                return Unauthorized(new {message = "帳號密碼錯誤"});
+            }
 
-        return Ok(new { token });
+            return Ok(new { token });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(429, new { message = ex.Message });
+        }
     }
 
 }
