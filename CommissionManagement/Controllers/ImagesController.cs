@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 [ApiController]
 public class ImagesController : ControllerBase
 {
+    private const long MaxImageUploadBytes = 10 * 1024 * 1024;
+
     private readonly IImageDatabaseService _service;
     public ImagesController(IImageDatabaseService service)
     {
@@ -70,6 +72,8 @@ public class ImagesController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPost("Upload")]
+    [RequestSizeLimit(MaxImageUploadBytes)]
+    [RequestFormLimits(MultipartBodyLengthLimit = MaxImageUploadBytes)]
     public async Task<IActionResult> UploadNewImage([FromForm] ImageUploadDTO dto)
     {
         try
