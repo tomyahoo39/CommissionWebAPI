@@ -17,7 +17,5 @@ namespace CommissionManagement.DTO.CommissionOrderDTO
         public string? SocialUrl { get; set; }
         [Required]
         public int CommissionTypeId { get; set; }
-        [Required]
-        public string CommissionSetting { get; set; }
     }
 }
