@@ -12,9 +12,11 @@ public class ImagesController : ControllerBase
     private const long MaxImageUploadBytes = 10 * 1024 * 1024;
 
     private readonly IImageDatabaseService _service;
-    public ImagesController(IImageDatabaseService service)
+    private readonly ILogger<ImagesController> _logger;
+    public ImagesController(IImageDatabaseService service, ILogger<ImagesController> logger)
     {
         _service = service;
+        _logger = logger;
     }
 
     [HttpGet("FirstThumbs")]
@@ -34,7 +36,8 @@ public class ImagesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogError(ex, "GetAllImages failed. CommissionTypeId: {CommissionTypeId}", commissionTypeId);
+            return BadRequest("查詢圖片失敗，請確認輸入資料");
         }
     }
 
@@ -49,7 +52,8 @@ public class ImagesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogError(ex, "GetAllImagesAdmin failed. CommissionTypeId: {CommissionTypeId}", commissionTypeId);
+            return BadRequest("查詢圖片失敗，請確認輸入資料");
         }
     }
 
@@ -83,11 +87,18 @@ public class ImagesController : ControllerBase
         }
         catch(KeyNotFoundException ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogWarning(ex, "UploadNewImage category not found. CommissionTypeId: {CommissionTypeId}", dto.CommissionTypeId);
+            return BadRequest("圖片上傳失敗，請確認輸入資料");
         }
         catch(ArgumentException ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogWarning(ex, "UploadNewImage invalid argument. CommissionTypeId: {CommissionTypeId}", dto.CommissionTypeId);
+            return BadRequest("圖片上傳失敗，請確認輸入資料");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "UploadNewImage failed. CommissionTypeId: {CommissionTypeId}", dto.CommissionTypeId);
+            return StatusCode(500, "圖片上傳失敗，請稍後再試");
         }
     }
 }

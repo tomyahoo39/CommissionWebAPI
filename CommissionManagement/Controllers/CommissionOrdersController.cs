@@ -15,10 +15,12 @@ public class CommissionOrdersController : ControllerBase
 {
     private readonly ICommissionOrderService _service;
     private readonly IRequestFloodGuardService _floodGuard;
-    public CommissionOrdersController(ICommissionOrderService service, IRequestFloodGuardService floodGuard)
+    private readonly ILogger<CommissionOrdersController> _logger;
+    public CommissionOrdersController(ICommissionOrderService service, IRequestFloodGuardService floodGuard, ILogger<CommissionOrdersController> logger)
     {
         _service = service;
         _floodGuard = floodGuard;
+        _logger = logger;
     }
 
     [Authorize(Roles = "Admin")]
@@ -37,10 +39,8 @@ public class CommissionOrdersController : ControllerBase
         }
         catch (Exception ex)
         {
-            {
-                return StatusCode(500, $"抽籤過程中發生錯誤: {ex.Message}");
-            }
-
+            _logger.LogError(ex, "DrawOrders failed. PeriodId: {PeriodId}, DrawCount: {DrawCount}", drawDto.PeriodId, drawDto.DrawCount);
+            return StatusCode(500, "操作失敗，請稍後再試");
         }
     }
 
@@ -78,10 +78,8 @@ public class CommissionOrdersController : ControllerBase
         }
         catch (Exception ex)
         {
-            {
-                return StatusCode(500, $"抽籤過程中發生錯誤: {ex.Message}");
-            }
-
+            _logger.LogError(ex, "ReDrawOrders failed. PeriodId: {PeriodId}, DrawCount: {DrawCount}", drawDto.PeriodId, drawDto.DrawCount);
+            return StatusCode(500, "操作失敗，請稍後再試");
         }
     }
 
@@ -111,7 +109,8 @@ public class CommissionOrdersController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"查詢過程中發生錯誤: {ex.Message}");
+            _logger.LogError(ex, "ShowOrderGuest failed");
+            return StatusCode(500, "查詢失敗，請稍後再試");
         }
     }
 
@@ -129,9 +128,17 @@ public class CommissionOrdersController : ControllerBase
 
         if (_floodGuard.IsDuplicate($"neworder:{hash}", TimeSpan.FromSeconds(30)))
             return StatusCode(429, "請勿重複送出，稍後再試");
-        
-        await _service.CreateNewOrder(createOrderDTO);
-        return Ok("委託單建立成功");
+
+        try
+        {
+            await _service.CreateNewOrder(createOrderDTO);
+            return Ok("委託單建立成功");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "CreateNewOrder failed. Email: {Email}, TypeId: {TypeId}", createOrderDTO.Email, createOrderDTO.CommissionTypeId);
+            return StatusCode(500, "建立委託單失敗，請稍後再試");
+        }
         
     }
 }
