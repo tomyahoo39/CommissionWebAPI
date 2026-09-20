@@ -45,10 +45,6 @@ public partial class CommissionContext : DbContext
             entity.Property(e => e.AdminNote)
                 .HasMaxLength(200)
                 .HasColumnName("admin_note");
-            entity.Property(e => e.CommissionSetting)
-                .IsRequired()
-                .HasMaxLength(500)
-                .HasColumnName("commission_setting");
             entity.Property(e => e.CommissionTypeId).HasColumnName("commission_type_id");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.Email)

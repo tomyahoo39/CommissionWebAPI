@@ -6,6 +6,8 @@ namespace CommissionManagement.Services.ImagesSer
 {
     public class ImageDatabaseService : IImageDatabaseService
     {
+        private const long MaxImageUploadBytes = 10 * 1024 * 1024;
+
         private readonly IImagesService _service;
         private readonly CommissionContext _context;
 
@@ -130,6 +132,16 @@ namespace CommissionManagement.Services.ImagesSer
 
         public async Task UploadNewImage(ImageUploadDTO dto)
         {
+            if (dto.File == null || dto.File.Length <= 0)
+            {
+                throw new ArgumentException("請選擇要上傳的圖片檔案");
+            }
+
+            if (dto.File.Length > MaxImageUploadBytes)
+            {
+                throw new ArgumentException("圖片檔案不可超過 10MB");
+            }
+
             var category = await _context.CommissionTypes.AnyAsync(c => c.Id == dto.CommissionTypeId);
             if (!category)
             {

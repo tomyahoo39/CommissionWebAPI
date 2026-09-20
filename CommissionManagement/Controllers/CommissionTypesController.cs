@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 public class CommissionTypesController : ControllerBase
 {
     private readonly ICommissionTypeService _service;
-    public CommissionTypesController(ICommissionTypeService service)
+    private readonly ILogger<CommissionTypesController> _logger;
+    public CommissionTypesController(ICommissionTypeService service, ILogger<CommissionTypesController> logger)
     {
         _service = service;
+        _logger = logger;
     }
 
     [HttpGet("ActiveType")]
@@ -82,7 +84,8 @@ public class CommissionTypesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"更新委託類型時發生錯誤: {ex.Message}");
+            _logger.LogError(ex, "UpdateType failed. TypeId: {TypeId}", id);
+            return StatusCode(500, "更新委託類型失敗，請稍後再試");
         }
     }
 }

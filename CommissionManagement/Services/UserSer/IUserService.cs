@@ -4,6 +4,6 @@ namespace CommissionManagement.Services.UserSer
 {
     public interface IUserService
     {
-        Task<string> Login(LoginDTO login);
+        Task<string?> Login(LoginDTO login, string clientIp);
     }
 }

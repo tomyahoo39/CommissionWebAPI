@@ -4,15 +4,23 @@ using CommissionManagement.Models;
 using CommissionManagement.Services.CommissionOrderSer;
 using CommissionManagement.DTO.CommissionOrderDTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Security.Cryptography;
+using System.Text;
+using CommissionManagement.Services.Security;
 
 [Route("api/[controller]")]
 [ApiController]
 public class CommissionOrdersController : ControllerBase
 {
     private readonly ICommissionOrderService _service;
-    public CommissionOrdersController(ICommissionOrderService service)
+    private readonly IRequestFloodGuardService _floodGuard;
+    private readonly ILogger<CommissionOrdersController> _logger;
+    public CommissionOrdersController(ICommissionOrderService service, IRequestFloodGuardService floodGuard, ILogger<CommissionOrdersController> logger)
     {
         _service = service;
+        _floodGuard = floodGuard;
+        _logger = logger;
     }
 
     [Authorize(Roles = "Admin")]
@@ -31,10 +39,8 @@ public class CommissionOrdersController : ControllerBase
         }
         catch (Exception ex)
         {
-            {
-                return StatusCode(500, $"抽籤過程中發生錯誤: {ex.Message}");
-            }
-
+            _logger.LogError(ex, "DrawOrders failed. PeriodId: {PeriodId}, DrawCount: {DrawCount}", drawDto.PeriodId, drawDto.DrawCount);
+            return StatusCode(500, "操作失敗，請稍後再試");
         }
     }
 
@@ -72,10 +78,8 @@ public class CommissionOrdersController : ControllerBase
         }
         catch (Exception ex)
         {
-            {
-                return StatusCode(500, $"抽籤過程中發生錯誤: {ex.Message}");
-            }
-
+            _logger.LogError(ex, "ReDrawOrders failed. PeriodId: {PeriodId}, DrawCount: {DrawCount}", drawDto.PeriodId, drawDto.DrawCount);
+            return StatusCode(500, "操作失敗，請稍後再試");
         }
     }
 
@@ -105,10 +109,12 @@ public class CommissionOrdersController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"查詢過程中發生錯誤: {ex.Message}");
+            _logger.LogError(ex, "ShowOrderGuest failed");
+            return StatusCode(500, "查詢失敗，請稍後再試");
         }
     }
 
+    [EnableRateLimiting("AnonWrite")]
     [HttpPost("NewOrder")]
     public async Task<IActionResult> CreateNewOrder([FromBody] CreateOrderDTO createOrderDTO)
     {
@@ -116,6 +122,13 @@ public class CommissionOrdersController : ControllerBase
         {
             return BadRequest("委託單資料不能為空");
         }
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var raw = $"{ip}|{createOrderDTO.Email}|{createOrderDTO.Nickname}|{createOrderDTO.CommissionTypeId}";
+        var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(raw)));
+
+        if (_floodGuard.IsDuplicate($"neworder:{hash}", TimeSpan.FromSeconds(30)))
+            return StatusCode(429, "請勿重複送出，稍後再試");
+
         try
         {
             await _service.CreateNewOrder(createOrderDTO);
@@ -123,7 +136,9 @@ public class CommissionOrdersController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"建立委託單過程中發生錯誤: {ex.Message}");
+            _logger.LogError(ex, "CreateNewOrder failed. Email: {Email}, TypeId: {TypeId}", createOrderDTO.Email, createOrderDTO.CommissionTypeId);
+            return StatusCode(500, "建立委託單失敗，請稍後再試");
         }
+        
     }
 }

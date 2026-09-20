@@ -18,8 +18,6 @@
 
         public string TypeName { get; set; }
 
-        public string CommissionSetting { get; set; }
-
         public int PaymentStatus { get; set; }
 
         public int WorkStatus { get; set; }
