@@ -60,6 +60,15 @@ builder.Services.AddRateLimiter(options =>
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var SecretKey = jwtSettings["Key"];
+if (string.IsNullOrWhiteSpace(SecretKey))
+{
+    throw new InvalidOperationException("JwtSettings:Key 不可為空，請於環境變數或 Secret Manager 設定。");
+}
+
+if (Encoding.UTF8.GetByteCount(SecretKey) < 32)
+{
+    throw new InvalidOperationException("JwtSettings:Key 長度不足，至少需要 32 bytes。");
+}
 
 builder.Services.AddAuthentication(option =>
 {
@@ -74,6 +83,8 @@ builder.Services.AddAuthentication(option =>
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            RequireExpirationTime = true,
+            ClockSkew = TimeSpan.Zero,
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey))
