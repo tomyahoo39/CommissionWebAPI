@@ -4,15 +4,21 @@ using CommissionManagement.Models;
 using CommissionManagement.Services.CommissionOrderSer;
 using CommissionManagement.DTO.CommissionOrderDTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Security.Cryptography;
+using System.Text;
+using CommissionManagement.Services.Security;
 
 [Route("api/[controller]")]
 [ApiController]
 public class CommissionOrdersController : ControllerBase
 {
     private readonly ICommissionOrderService _service;
-    public CommissionOrdersController(ICommissionOrderService service)
+    private readonly IRequestFloodGuardService _floodGuard;
+    public CommissionOrdersController(ICommissionOrderService service, IRequestFloodGuardService floodGuard)
     {
         _service = service;
+        _floodGuard = floodGuard;
     }
 
     [Authorize(Roles = "Admin")]
@@ -109,6 +115,7 @@ public class CommissionOrdersController : ControllerBase
         }
     }
 
+    [EnableRateLimiting("AnonWrite")]
     [HttpPost("NewOrder")]
     public async Task<IActionResult> CreateNewOrder([FromBody] CreateOrderDTO createOrderDTO)
     {
@@ -116,14 +123,15 @@ public class CommissionOrdersController : ControllerBase
         {
             return BadRequest("委託單資料不能為空");
         }
-        try
-        {
-            await _service.CreateNewOrder(createOrderDTO);
-            return Ok("委託單建立成功");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"建立委託單過程中發生錯誤: {ex.Message}");
-        }
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var raw = $"{ip}|{createOrderDTO.Email}|{createOrderDTO.Nickname}|{createOrderDTO.CommissionTypeId}";
+        var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(raw)));
+
+        if (_floodGuard.IsDuplicate($"neworder:{hash}", TimeSpan.FromSeconds(30)))
+            return StatusCode(429, "請勿重複送出，稍後再試");
+        
+        await _service.CreateNewOrder(createOrderDTO);
+        return Ok("委託單建立成功");
+        
     }
 }

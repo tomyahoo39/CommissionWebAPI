@@ -12,11 +12,37 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
+using CommissionManagement.Services.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<IRequestFloodGuardService, RequestFloodGuardService>();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // 匿名寫入專用策略（依 IP 分區）
+    options.AddPolicy("AnonWrite", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ip,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,                  // 每分鐘最多 5 次
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
+    });
+});
+
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var SecretKey = jwtSettings["Key"];
 
@@ -89,6 +115,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseStaticFiles();
+
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
