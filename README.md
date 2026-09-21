@@ -93,8 +93,17 @@
 ### 設定 User Secrets (機密資訊)
 於專案目錄下執行以下指令設定本地開發變數，避免將真實密碼 commit 到 Git：
 ```bash
-dotnet user-secrets set "ConnectionStrings:CommissionContext" "YOUR_LOCAL_DB_CONNECTION_STRING"
+# 設定資料庫連線與 JWT 密鑰
+dotnet user-secrets set "ConnectionStrings:CommissionContext" "Server=YOUR_SERVER;Database=YOUR_DB;User Id=YOUR_USER;Password=YOUR_PASSWORD;Encrypt=True;TrustServerCertificate=True;"
 dotnet user-secrets set "JwtSettings:Key" "YOUR_SUPER_SECRET_KEY_AT_LEAST_32_BYTES"
+dotnet user-secrets set "JwtSettings:Issuer" "CommissionApi"
+dotnet user-secrets set "JwtSettings:Audience" "CommissionClient"
+dotnet user-secrets set "JwtSettings:ExpiresInMinutes" "120"
+
+# 設定 Cloudinary 圖片上傳服務金鑰
+dotnet user-secrets set "Cloudinary:CloudName" "YOUR_CLOUD_NAME"
+dotnet user-secrets set "Cloudinary:ApiKey" "YOUR_API_KEY"
+dotnet user-secrets set "Cloudinary:ApiSecret" "YOUR_API_SECRET"
 ```
 ### 啟動專案與檢視 API 文件
 
