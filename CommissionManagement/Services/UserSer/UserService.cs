@@ -28,6 +28,14 @@ namespace CommissionManagement.Services.UserSer
         public async Task<string?> Login(LoginDTO login, string clientIp)
         {
             var username = login.Username?.Trim() ?? string.Empty;
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username);
+            if(user == null)
+            {
+                return null;
+            }
+
             var failCountKey = $"login:failcount:{clientIp}:{username}";
             var lockKey = $"login:lock:{clientIp}:{username}";
 
@@ -36,10 +44,8 @@ namespace CommissionManagement.Services.UserSer
                 throw new InvalidOperationException("登入失敗次數過多，請 10 分鐘後再試");
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == username);
 
-            if(user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.PasswordHash))
+            if(!BCrypt.Net.BCrypt.Verify(login.Password, user.PasswordHash))
             {
                 _floodGuard.TryGet<int>(failCountKey, out var failedCount);
                 failedCount++;
@@ -49,7 +55,7 @@ namespace CommissionManagement.Services.UserSer
                 {
                     _floodGuard.Set(lockKey, true, LoginLockoutWindow);
                     _floodGuard.Remove(failCountKey);
-                    throw new InvalidOperationException("登入失敗次數過多，請 10 分鐘後再試");
+                    throw new InvalidOperationException("密碼錯誤次數過多，帳號已暫時鎖定，請 10 分鐘後再試");
                 }
 
                 return null;
