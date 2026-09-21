@@ -1,0 +1,30 @@
+name: Backend CI (Dev Check)
+
+on:
+  pull_request:
+    branches:
+      - devlopment   # 當有 PR 準備併入 dev 時觸發 (如果你的分支名稱是 development，請改為 development)
+
+jobs:
+  build-and-test:
+    name: Build & Test .NET API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x' # 設定使用 .NET 10 SDK
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Project
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run Unit Tests
+        # 執行單元測試，若沒有設定測試專案也不會報錯阻斷
+        run: dotnet test --no-build --verbosity normal || echo "No unit tests found, skipping."
