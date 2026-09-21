@@ -124,7 +124,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173", "http://localhost:4173")
+            policy.WithOrigins("http://localhost:5173", "https://commission-vue.vercel.app")
             .AllowAnyHeader().AllowAnyMethod();
         });
 });
