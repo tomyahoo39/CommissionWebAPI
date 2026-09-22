@@ -5,8 +5,6 @@ namespace CommissionManagement.DTO.CommissionOrderDTO
     public class CreateOrderDTO
     {
         [Required]
-        public string Title { get; set; }
-        [Required]
         public string Nickname { get; set; }
         [Required]
         [EmailAddress]
