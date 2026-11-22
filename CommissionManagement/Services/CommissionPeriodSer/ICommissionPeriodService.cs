@@ -9,5 +9,7 @@ namespace CommissionManagement.Services.CommissionPeriodSer
         Task<IEnumerable<AllPeriodDTO>> AllPeriods();
 
         Task CreatePeriod(CreatePeriodDTO createPeriodDTO);
+
+        Task<bool> DeletePeriod(int periodId);
     }
 }
