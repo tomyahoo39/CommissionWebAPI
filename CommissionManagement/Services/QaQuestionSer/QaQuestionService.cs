@@ -42,5 +42,21 @@ namespace CommissionManagement.Services.QaQuestionSer
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> QaFinish(int id, QaQuestionFinishDTO dto)
+        {
+            var qaQuestion = await _context.QaQuestions.FindAsync(id);
+
+            if(qaQuestion == null)
+            {
+                return false;
+            }
+
+            qaQuestion.IsFinish = dto.IsFinish;
+            await _context.SaveChangesAsync();
+
+            return true;
+
+        }
+
     }
 }
