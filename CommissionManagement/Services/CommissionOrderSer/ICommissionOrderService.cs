@@ -17,5 +17,7 @@ namespace CommissionManagement.Services.CommissionOrderSer
 
         Task CreateNewOrder(CreateOrderDTO createOrderDTO);
 
+        Task<IEnumerable<ShowPeriodOrderAdmin>> ShowPeriodOrderAdmin(int periodId);
+
     }
 }

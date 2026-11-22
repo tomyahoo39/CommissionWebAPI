@@ -47,4 +47,17 @@
 
         public DateOnly? ScheduledDate { get; set; }
     }
+
+    public class ShowPeriodOrderAdmin
+    {
+        public int Id { get; set; }
+
+        public string Title { get; set; }
+
+        public string Nickname { get; set; }
+
+        public string Email { get; set; }
+
+        public string TypeName { get; set; }
+    }
 }
