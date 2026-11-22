@@ -7,5 +7,7 @@ namespace CommissionManagement.Services.QaQuestionSer
         Task<IEnumerable<QaQuestionGetAllDTO>> GetAllQaQuestions();
 
         Task Create(QaQuestionCreateDTO qaQuestion);
+
+        Task<bool> QaFinish(int id, QaQuestionFinishDTO isFinish);
     }
 }

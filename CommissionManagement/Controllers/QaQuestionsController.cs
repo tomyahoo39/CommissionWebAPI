@@ -46,4 +46,18 @@ public class QaQuestionsController : ControllerBase
         return Created();
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpPut("QaIsFinish/{id}")]
+    public async Task<IActionResult> QaIsFinish(int id, QaQuestionFinishDTO dto)
+    {
+        var result = await _service.QaFinish(id, dto);
+
+        if(result == false)
+        {
+            return NotFound($"找不到{id}的資料");
+        }
+
+        return Ok(new {message = "更新成功"});
+    }
+
 }

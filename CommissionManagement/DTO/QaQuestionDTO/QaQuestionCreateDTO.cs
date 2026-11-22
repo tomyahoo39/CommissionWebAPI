@@ -11,4 +11,9 @@ namespace CommissionManagement.DTO.QaQuestionDTO
         [Required]
         public string Question { get; set; }
     }
+
+    public class QaQuestionFinishDTO
+    {
+        public bool IsFinish { get; set; }
+    }
 }

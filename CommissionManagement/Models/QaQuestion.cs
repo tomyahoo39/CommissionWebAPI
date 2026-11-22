@@ -14,4 +14,6 @@ public partial class QaQuestion
     public string Question { get; set; }
 
     public DateOnly CreatedAt { get; set; }
+
+    public bool IsFinish { get; set; }
 }

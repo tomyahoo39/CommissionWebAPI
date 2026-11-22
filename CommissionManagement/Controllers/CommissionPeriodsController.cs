@@ -42,4 +42,18 @@ public class CommissionPeriodsController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("DeletePeriod/{periodId}")]
+    public async Task<IActionResult> DeletePeriod(int periodId)
+    {
+        var result = await _service.DeletePeriod(periodId);
+
+        if(result == false)
+        {
+            return NotFound($"找不到{periodId}的資料");
+        }
+
+        return Ok();
+    }
+
 }
