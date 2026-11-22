@@ -22,8 +22,8 @@ namespace CommissionManagement.Services.QaQuestionSer
                     Id = q.Id,
                     Email = q.Email,
                     Question = q.Question,
-                    CreatedAt = q.CreatedAt
-
+                    CreatedAt = q.CreatedAt,
+                    IsFinish = q.IsFinish,
                 }).ToListAsync();
 
             return query;
