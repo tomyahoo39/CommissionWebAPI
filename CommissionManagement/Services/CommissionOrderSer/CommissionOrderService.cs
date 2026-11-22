@@ -304,5 +304,25 @@ namespace CommissionManagement.Services.CommissionOrderSer
                 throw;
             }
         }
+
+        public async Task<IEnumerable<ShowPeriodOrderAdmin>> 
+            ShowPeriodOrderAdmin(int periodId)
+        {
+            var periodOrders = await (
+                from o in _context.CommissionOrders
+                join p in _context.CommissionPeriods on o.PeriodId equals p.Id
+                join t in _context.CommissionTypes on o.CommissionTypeId equals t.Id
+                where o.PeriodId == periodId
+                select new ShowPeriodOrderAdmin
+                {
+                    Id = o.Id,
+                    Title = p.Title,
+                    Nickname = o.Nickname,
+                    Email = o.Email,
+                    TypeName = t.TypeName
+                }).OrderBy(o => o.Id).ToListAsync();
+
+            return periodOrders;
+        }
     }
 }

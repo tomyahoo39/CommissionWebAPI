@@ -141,4 +141,16 @@ public class CommissionOrdersController : ControllerBase
         }
         
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("PeriodOrders/{periodId}")]
+    public async Task<ActionResult<ShowPeriodOrderAdmin>> ShowPeriodOrderAdmin(int periodId)
+    {
+        var periodOrders = await _service.ShowPeriodOrderAdmin(periodId);
+        if(periodOrders == null || !periodOrders.Any())
+        {
+            return NotFound($"找不到 PeriodId 為 {periodId} 的委託訂單資料");
+        }
+        return Ok(periodOrders);
+    }
 }

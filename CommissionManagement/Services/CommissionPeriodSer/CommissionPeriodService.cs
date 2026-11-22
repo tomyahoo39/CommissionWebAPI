@@ -67,5 +67,20 @@ namespace CommissionManagement.Services.CommissionPeriodSer
             await _context.CommissionPeriods.AddAsync(newPeriod);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> DeletePeriod(int periodId)
+        {
+            var period = await _context.CommissionPeriods.FirstOrDefaultAsync(p => p.Id == periodId);
+
+            if(period == null)
+            {
+                return false;
+            }
+
+            _context.CommissionPeriods.Remove(period);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
